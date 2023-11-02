@@ -108,6 +108,8 @@ function renderBounds(config, renderTime) {
 
 function renderPlayer(config, renderTime) {
 	const scale = 20
+	const forceScale = 100
+	const r = 1 * scale
 
 	const virtualRenderWorldOrigin = Space.gameToRendering(config, config.world.origin)
 
@@ -117,8 +119,6 @@ function renderPlayer(config, renderTime) {
 		y: Math.max(config.gfx.bounds.render.origin.y, Math.min(renderPositionFull.y, config.gfx.bounds.render.origin.y + config.gfx.bounds.render.height)),
 	}
 
-	const forceScale = 100
-	const r = 1 * scale
 	config.gfx.context.strokeStyle = 'black'
 	config.gfx.context.fillStyle = 'white'
 	config.gfx.context.beginPath()

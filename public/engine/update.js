@@ -79,6 +79,22 @@ export function update(config, renderTime) {
 		config.world.origin.y = config.player.position.y
 	}
 
+	// field point capture
+	if(config.player.inventory !== undefined) {
+		config.player.inventory.x = Space.gameToTile(config, config.player.position).x
+		config.player.inventory.y = Space.gameToTile(config, config.player.position).y
+	}
+	else {
+		for(const field of config.flow.field) {
+			const fieldGame = Space.tileToGame(config, field)
+			const distanceToField = Vector.magnitude(Vector.subtract(config.player.position, fieldGame))
+
+			if(distanceToField < 40) {
+				config.player.inventory = field
+			}
+		}
+	}
+
 
 	// sand
 	for(const sand of config.flow.sand) {
