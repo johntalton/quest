@@ -19,6 +19,11 @@ function handleMouseClick(config, event) {
 	// console.log(location)
 }
 
+function handleTouchEnd(config, event) {
+	console.log('proxy touch')
+	handleMouseClick(config, event)
+}
+
 function handleMouseMove(config, event) {
 	if(!config?.ok) { return }
 	if (config.gfx.bounds === undefined) { return }
@@ -94,7 +99,11 @@ export function bindHandler(config) {
     handleKeyDown(config, event)
   })
 
-  window.addEventListener('keyup', event => {
-    handleKeyUp(config, event)
-  })
+	window.addEventListener('keyup', event => {
+		handleKeyUp(config, event)
+	})
+
+	window.addEventListener('touchend', event => {
+		handleTouchEnd(config, event)
+	})
 }
