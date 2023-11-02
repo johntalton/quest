@@ -98,14 +98,14 @@ export function update(config, renderTime) {
 
 		sand.velocity = Vector.multiply(Vector.add(sand.velocity, acc), .95)
 		sand.position = Vector.add(sand.position, sand.velocity)
-		sand.age -= 20
+		sand.age -= 1
 
 		if(sand.age <= 0) {
 			const pos = { x: Math.random() * 2000 - 1000, y: Math.random() * 2000 - 1000 }
 			sand.first = pos
 			sand.position = pos
 			sand.velocity = { x: Math.random() * 1, y: Math.random() * 1 }
-			sand.age = Math.random() * 1000 + 1000
+			sand.age = 1000 + Math.random() * 1000
 			sand.lastPositions = undefined
 		}
 	}

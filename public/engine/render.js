@@ -1,7 +1,6 @@
-import { Rect } from '../lib/rect.js'
 import { Vector } from '../lib/vector.js'
 import { Space } from '../lib/space.js'
-import { steeringForce } from '../lib/util.js'
+import { steeringForce, bounds, surfaceArea, tileLookup } from '../lib/util.js'
 import { mapRange } from '../lib/scalar.js'
 
 function renderBackground(config, renderTime) {
@@ -9,51 +8,13 @@ function renderBackground(config, renderTime) {
 	config.gfx.context.clearRect(0, 0, config.gfx.canvas.width, config.gfx.canvas.height)
 }
 
-function tileLookup(config, location) {
-
-	const tile = config.surface.tiles.find(item => item.x === location.x && item.y === location.y)
-	if(tile === undefined) { return { location } }
-
-	const sprite = config.gfx.sprites.find(item => item.name === tile.sprite)
-
-
-	return {
-		location,
-		sprite
-	}
-}
-
-function *surfaceArea(config) {
-	const size = 100
-
-	const worldOriginTile = Space.gameToTile(config, config.world.origin)
-
-	const offsetXGame = config.world.origin.x % 100
-	const start = Vector.add(worldOriginTile, { x: -3, y: -4 })
-	const end = Vector.add(worldOriginTile, { x: 10, y: 6 })
-
-	for(let y = start.y; y < end.y; y++) {
-		for(let x = start.x; x < end.x; x++) {
-			const tile = { x, y }
-			const gameTile = Space.tileToGame(config, tile)
-
-			const render = Space.gameToRendering(config, gameTile)
-
-			yield {
-				render,
-				tile
-			}
-		}
-	}
-}
-
 function renderSurface(config, renderTime) {
 	//
 	const { cabinet } = config.gfx.textures
 
 	const size = {
-		x: 100 * config.gfx.bounds.render.width / config.world.bounds.width,
-		y: 100 * config.gfx.bounds.render.height / config.world.bounds.height
+		x: config.surface.width * config.gfx.bounds.render.width / config.world.bounds.width,
+		y: config.surface.height * config.gfx.bounds.render.height / config.world.bounds.height
 	}
 
 	for(const area of surfaceArea(config)) {
@@ -92,69 +53,6 @@ function renderSurface(config, renderTime) {
 			style: 'rgba(0 0 0 / .5)'
 		})
 
-	}
-}
-
-function bounds(config) {
-	// viewport boundary
-	const x = Math.max(0, (config.gfx.canvas.width - config.gfx.viewport.clientWidth) / 2)
-	const y = Math.max(0, (config.gfx.canvas.height - config.gfx.viewport.clientHeight) / 2)
-	const w = Math.min(config.gfx.canvas.width, config.gfx.viewport.clientWidth)
-	const h = Math.min(config.gfx.canvas.height, config.gfx.viewport.clientHeight)
-
-	// padding
-	const pad = 0
-	const viewportRect = {
-		origin: {
-			x: x + pad,
-			y: y + pad
-		},
-		width: w - 2 * pad,
-		height: h - 2 * pad
-	}
-
-	// render space
-	const canvasOrigin = {
-		x: config.gfx.canvas.width / 2,
-		y: config.gfx.canvas.height / 2
-	}
-
-	// game space
-	const boundsOrigin = {
-		x: config.world.bounds.width / 2,
-		y: config.world.bounds.height / 2
-	}
-
-	//
-	const gameRect = {
-		origin: {
-			x: canvasOrigin.x - boundsOrigin.x,
-			y: canvasOrigin.y - boundsOrigin.y
-		},
-		width: config.world.bounds.width,
-		height: config.world.bounds.height
-	}
-
-	const redDotRect = Rect.clip(gameRect, viewportRect)
-
-	const inset = 10
-	const blockStart = 0
-	const blockEnd = 20
-	const inline = 20
-
-	const renderRect  = {
-		origin: {
-			x: redDotRect.origin.x + inset + inline,
-			y: redDotRect.origin.y + inset + blockStart
-		},
-		width: redDotRect.width - (2 * inset) - inline - inline,
-		height: redDotRect.height - (2 * inset) - blockStart - blockEnd
-	}
-
-	config.gfx.bounds = {
-		viewport: viewportRect,
-		render: renderRect,
-		game: gameRect,
 	}
 }
 
@@ -219,6 +117,7 @@ function renderPlayer(config, renderTime) {
 		y: Math.max(config.gfx.bounds.render.origin.y, Math.min(renderPositionFull.y, config.gfx.bounds.render.origin.y + config.gfx.bounds.render.height)),
 	}
 
+	const forceScale = 100
 	const r = 1 * scale
 	config.gfx.context.strokeStyle = 'black'
 	config.gfx.context.fillStyle = 'white'
@@ -237,7 +136,7 @@ function renderPlayer(config, renderTime) {
 	config.gfx.context.stroke()
 
 	//
-	const offsetV = Vector.multiply(config.player.velocity, 100)
+	const offsetV = Vector.multiply(config.player.velocity, forceScale)
 	const v = Vector.add(renderPosition, offsetV)
 	config.gfx.context.strokeStyle = 'red'
 	config.gfx.context.beginPath()
@@ -247,7 +146,7 @@ function renderPlayer(config, renderTime) {
 
 
 	//
-	const offsetA = Vector.multiply(config.player.acceleration, 100)
+	const offsetA = Vector.multiply(config.player.acceleration, forceScale)
 	const a = Vector.add(renderPosition, offsetA)
 	config.gfx.context.strokeStyle = 'purple'
 	config.gfx.context.beginPath()
@@ -386,17 +285,14 @@ function renderField(config) {
 function renderSand(config) {
 	// const r = 1
 
+
 	for(const sand of config.flow.sand) {
+		config.gfx.context.beginPath()
 		const sandRender = Space.gameToRendering(config, sand.position)
 
-		const h = sand.age / 10
-		const a = (sand.age > 200) ? 1 : mapRange(sand.age, 0, 200, 0, 1)
-		config.gfx.context.fillStyle = `hsl(${h} 80% 50%)`
+		const h = sand.first.x % 360
+		const a = (sand.age > 500) ? 1 : mapRange(sand.age, 0, 500, 0, 1)
 		config.gfx.context.strokeStyle = `hsl(${h} 80% 50% / ${a})`
-
-		config.gfx.context.beginPath()
-		// config.gfx.context.ellipse(sandRender.x, sandRender.y, r, r, 0, 0, 2 * Math.PI)
-		// config.gfx.context.fill()
 
 		const firstRender = Space.gameToRendering(config, sand.first)
 		config.gfx.context.moveTo(firstRender.x, firstRender.y)
@@ -408,9 +304,9 @@ function renderSand(config) {
 		}
 
 		config.gfx.context.lineTo(sandRender.x, sandRender.y)
-
 		config.gfx.context.stroke()
 	}
+
 }
 
 function renderFlow(config, renderTime) {

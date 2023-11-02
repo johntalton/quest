@@ -1,5 +1,4 @@
 import { mapRange } from './scalar.js'
-import { Vector } from './vector.js'
 
 export class Space {
 	static renderToGame(config, vec) {
@@ -37,12 +36,15 @@ export class Space {
 
 	static gameToTile(config, vec) {
 		return {
-			x: Math.trunc(vec.x / 100),
-			y: Math.trunc(vec.y / 100)
+			x: Math.trunc(vec.x / config.surface.width),
+			y: Math.trunc(vec.y / config.surface.height)
 		}
 	}
 
 	static tileToGame(config, vec) {
-		return Vector.multiply(vec, 100)
+		return {
+			x: Math.trunc(vec.x * config.surface.width),
+			y: Math.trunc(vec.y * config.surface.height)
+		}
 	}
 }

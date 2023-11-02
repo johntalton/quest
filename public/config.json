@@ -1,50 +1,49 @@
 {
-"gfx": {
-	"textures": {
-		"cabinet": "./cabinet.png"
+	"gfx": {
+		"textures": {
+			"cabinet": "./cabinet.png"
+		},
+		"sprites": [
+			{ "name": "boy", "texture": "cabinet", "origin": { "x": 550, "y": 2095 }, "width": 450, "height": 375 },
+			{ "name": "box", "texture": "cabinet", "origin": { "x": 620, "y": 3020 }, "width": 270, "height": 490 },
+			{ "name": "bars", "texture": "cabinet", "origin": { "x": 2360, "y": 1840 }, "width": 110, "height": 70 },
+			{ "name": "triangle", "texture": "cabinet", "origin": { "x": 2360, "y": 1910 }, "width": 110, "height": 70 },
+			{ "name": "square", "texture": "cabinet", "origin": { "x": 2360, "y": 1990 }, "width": 110, "height": 70 }
+		]
 	},
-	"sprites": [
-		{ "name": "boy", "texture": "cabinet", "origin": { "x": 550, "y": 2095 }, "width": 450, "height": 375 },
-		{ "name": "box", "texture": "cabinet", "origin": { "x": 620, "y": 3020 }, "width": 270, "height": 490 },
-		{ "name": "bars", "texture": "cabinet", "origin": { "x": 2360, "y": 1840 }, "width": 110, "height": 70 },
-		{ "name": "triangle", "texture": "cabinet", "origin": { "x": 2360, "y": 1910 }, "width": 110, "height": 70 },
-		{ "name": "square", "texture": "cabinet", "origin": { "x": 2360, "y": 1990 }, "width": 110, "height": 70 }
-	]
-},
 
-"world": {
-	"accelerationDampening": 1,
-	"velocityDampening": 0.95,
+	"world": {
+		"accelerationDampening": 1,
+		"velocityDampening": 0.95,
 
-	"accelerationLimit": 0.15,
+		"accelerationLimit": 0.15,
 
-	"origin": { "x": 0, "y": 0 },
-	"bounds": {
-		"width": 700,
-		"height": 200
-	}
-},
+		"origin": { "x": 0, "y": 0 },
+		"bounds": {
+			"width": 700,
+			"height": 200
+		}
+	},
 
-"surface": {
-	"width": 100,
-	"height": 100,
+	"surface": {
+		"width": 150,
+		"height": 150,
 
-	"tiles": [
-		{ "x": 0, "y": 5, "sprite": "box" },
-		{ "x": 3, "y": 2, "sprite": "box" },
-		{ "x": 0, "y": -2, "sprite": "box" }
-	]
-},
+		"tiles": [
+			{ "x": 0, "y": 5, "sprite": "box" },
+			{ "x": 3, "y": 2, "sprite": "box" },
+			{ "x": 0, "y": -2, "sprite": "box" }
+		]
+	},
 
 	"flow": {
-		"sand": 20,
+		"sand": 40,
 		"field": [
 
 			{ "x": 0, "y": 0 },
 			{ "x": 5, "y": 0 }
 		]
 	},
-
 
 	"player": {
 		"facing": 0,
