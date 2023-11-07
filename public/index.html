@@ -8,16 +8,61 @@
 
 		<title>Quest</title>
 
+		<!-- <link rel="icon" href="favicon.ico" /> -->
+		<!-- <link rel="preload" as="img" href="" fetchpriority="high" /> -->
+		<!-- <link rel="preload" href="/assets/Pacifico-Bold.woff2" as="font" type="font/woff2" crossorigin> -->
+		<link rel="modulepreload" href="./engine/setup.js" fetchpriority="auto" />
+		<link rel="modulepreload" href="./engine/render.js" fetchpriority="low" />
+		<link rel="modulepreload" href="./engine/update.js" fetchpriority="low" />
+
+		<link id="config" rel="preload" as="fetch" href="./config.json" type="text/json" crossorigin="anonymous" fetchpriority="high" />
+
 		<link rel="stylesheet" type="text/css" href="index.css" />
 		<script async defer type="module" src="./index.js"></script>
 	</head>
 
 	<body>
 		<main id="viewport">
-			<canvas id="canvas" width="1600" height="1600"></canvas>
+			<canvas id="canvas" width="1600" height="1600" data-pause></canvas>
 		</main>
 		<aside>
 			Quest
 		</aside>
+		<dialog id="dialogPause">
+			PAUSED
+		</dialog>
+		<dialog id="dialogError">
+			<span>Error</span>
+			<form>
+				<label for="dialogErrorMessage">system message</label>
+				<output id="dialogErrorMessage"></output>
+			</form>
+		</dialog>
+		<!-- <dialog>
+			<span>Loading</span>
+		</dialog> -->
+		<dialog id="dialogSnapshot">
+			<!-- <button data-icon>⬅</button> -->
+			<span>Snapshots</span>
+			<p>
+				Saved slots:
+			</p>
+			<form method="dialog">
+				<ul id="snapshotsList">
+					<li data-skeleton>
+						…
+					</li>
+					<template>
+						<li>
+							<button data-submit part="button">
+								<slot name="icon" part="icon"></slot>
+								<slot name="name" part="name"></slot>
+								<slot name="description" part="description"></slot>
+							</button>
+						</li>
+					</template>
+				</ul>
+			</form>
+		</dialog>
 	</body>
 </html>

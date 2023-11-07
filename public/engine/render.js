@@ -31,7 +31,7 @@ function renderSurface(config, renderTime) {
 				tile.sprite.origin.x, tile.sprite.origin.y, tile.sprite.width, tile.sprite.height,
 				offset.origin.x, offset.origin.y, offset.width, offset.height)
 
-			config.gfx.context.fillStyle = 'rgb(200 200 200 / .8)'
+			config.gfx.context.fillStyle = 'rgb(200 200 200 / .75)'
 			config.gfx.context.fillRect(
 				offset.origin.x, offset.origin.y,
 				offset.width, offset.height)
@@ -271,6 +271,7 @@ function renderField(config) {
 
 	config.gfx.context.lineWidth = 3
 
+	//
 	for(const field of config.flow.field) {
 		const fieldGame = Space.tileToGame(config, field)
 		const fieldRender = Space.gameToRendering(config, fieldGame)
@@ -280,6 +281,37 @@ function renderField(config) {
 		config.gfx.context.ellipse(fieldRender.x, fieldRender.y, r, r, 0, 0, 2 * Math.PI)
 		config.gfx.context.stroke()
 	}
+
+	//
+	const sandTile = Space.gameToTile(config, config.player.position)
+	const start = Vector.add(sandTile, { x: -5, y: -5 })
+	const end = Vector.add(sandTile, { x: 5, y: 5 })
+
+	// config.gfx.context.beginPath()
+	for(let y = start.y; y < end.y; y++) {
+		for(let x = start.x; x < end.x; x++) {
+			const fg = Space.tileToGame(config, { x, y })
+			const fieldRender = Space.gameToRendering(config, fg)
+
+			config.gfx.context.beginPath()
+			config.gfx.context.strokeStyle = 'magenta'
+			// config.gfx.context.beginPath()
+			config.gfx.context.moveTo(fieldRender.x, fieldRender.y)
+			config.gfx.context.ellipse(fieldRender.x, fieldRender.y, r, r, 0, 0, 2 * Math.PI)
+			// config.gfx.contexconfig.gfx.context.stroke()t.stroke()
+
+			const value = config.flow.fieldFn({ x, y })
+			const v = Vector.add(Vector.multiply(Vector.from(value), 50), fieldRender)
+
+			// config.gfx.context.beginPath()
+			config.gfx.context.moveTo(fieldRender.x, fieldRender.y)
+			config.gfx.context.lineTo(v.x, v.y)
+			config.gfx.context.stroke()
+
+
+		}
+	}
+	// config.gfx.context.stroke()
 }
 
 function renderSand(config) {
@@ -291,13 +323,14 @@ function renderSand(config) {
 		const sandRender = Space.gameToRendering(config, sand.position)
 
 		const h = sand.first.x % 360
-		const a = (sand.age > 500) ? 1 : mapRange(sand.age, 0, 500, 0, 1)
+		const maxA = 0.75
+		const a = (sand.age > 500) ? maxA : mapRange(sand.age, 0, 500, 0, maxA)
 		config.gfx.context.strokeStyle = `hsl(${h} 80% 50% / ${a})`
 
 		const firstRender = Space.gameToRendering(config, sand.first)
 		config.gfx.context.moveTo(firstRender.x, firstRender.y)
 
-		config.gfx.context.lineWidth = 2
+		config.gfx.context.lineWidth = 10
 		for(const foo of sand.lastPositions ?? []) {
 			const last = Space.gameToRendering(config, foo)
 			config.gfx.context.lineTo(last.x, last.y)
@@ -318,6 +351,8 @@ export function render(config, renderTime) {
 	if (!config?.ok) { return }
 
 	if (config.gfx.bounds === undefined) { bounds(config); return }
+
+	if(config.pause === true) { return }
 
 	renderBackground(config, renderTime)
 	renderSurface(config, renderTime)

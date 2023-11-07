@@ -95,8 +95,9 @@ export function *surfaceArea(config) {
 
 export function tileLookup(config, location) {
 
-	const tile = config.surface.tiles.find(item => item.x === location.x && item.y === location.y)
-	if(tile === undefined) { return { location } }
+	const tileNamed = config.surface.tiles.find(item => item.x === location.x && item.y === location.y)
+	const tile = tileNamed ?? config.surface.tiles[0]
+
 
 	const sprite = config.gfx.sprites.find(item => item.name === tile.sprite)
 

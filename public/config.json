@@ -4,6 +4,8 @@
 			"cabinet": "./cabinet.png"
 		},
 		"sprites": [
+			{ "name": "_", "texture": "cabinet", "origin": { "x": 230, "y": 2600 }, "width": 210, "height": 700 },
+
 			{ "name": "boy", "texture": "cabinet", "origin": { "x": 550, "y": 2095 }, "width": 450, "height": 375 },
 			{ "name": "box", "texture": "cabinet", "origin": { "x": 620, "y": 3020 }, "width": 270, "height": 490 },
 			{ "name": "bars", "texture": "cabinet", "origin": { "x": 2360, "y": 1840 }, "width": 110, "height": 70 },
@@ -26,23 +28,25 @@
 	},
 
 	"surface": {
-		"width": 150,
-		"height": 150,
+		"width": 200,
+		"height": 100,
 
 		"tiles": [
-			{ "x": 0, "y": 5, "sprite": "box" },
-			{ "x": 3, "y": 2, "sprite": "box" },
-			{ "x": 0, "y": -2, "sprite": "box" }
+			{ "x": 0, "y": 0, "sprite": "_" },
+			{ "x": 3, "y": 2, "sprite": "triangle" },
+			{ "x": 0, "y": -2, "sprite": "bars" },
+			{ "x": 0, "y": -3, "sprite": "box" }
 		]
 	},
 
 	"flow": {
-		"sand": 40,
+		"sand": 10,
 		"field": [
 
 			{ "x": 0, "y": 0 },
 			{ "x": 5, "y": 0 }
-		]
+		],
+		"fieldFn": "noise"
 	},
 
 	"player": {
@@ -54,5 +58,11 @@
 		},
 		"velocity": { "x": 0, "y": 0},
 		"acceleration": { "x": 0, "y": 0}
-	}
+	},
+
+	"saves": [
+		{ "name": "first", "icon": "💎" },
+		{ "name": "second", "description": "The quick brown fox jumped over the lazy sleeping dog"},
+		{ "name": "third", "icon": "🥇", "description": "Now is the time for all good men to come to the aid of their fellow man" }
+	]
 }

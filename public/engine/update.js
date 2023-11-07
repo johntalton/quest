@@ -98,13 +98,33 @@ export function update(config, renderTime) {
 
 	// sand
 	for(const sand of config.flow.sand) {
-		const accumulator = config.flow.field.reduce((acc, f) => {
-			const fg = Space.tileToGame(config, f)
-			const offset = Vector.subtract(fg, sand.position)
-			const d = Vector.magnitude(offset)
-			const t = Vector.multiply(offset, 1 / d)
-			return Vector.add(acc, t)
-		}, { x: 0, y: 0 })
+		// const accumulator = config.flow.field.reduce((acc, f) => {
+		// 	const fg = Space.tileToGame(config, f)
+		// 	const offset = Vector.subtract(fg, sand.position)
+		// 	const d = Vector.magnitude(offset)
+		// 	const t = Vector.multiply(offset, 1 / d)
+		// 	return Vector.add(acc, t)
+		// }, { x: 0, y: 0 })
+
+		const sandTile = Space.gameToTile(config, sand.position)
+		const start = Vector.add(sandTile, { x: -5, y: -5 })
+		const end = Vector.add(sandTile, { x: 5, y: 5 })
+
+		let accumulator = { x: 0, y: 0 }
+		for(let y = start.y; y < end.y; y++) {
+			for(let x = start.x; x < end.x; x++) {
+				const fg = Space.tileToGame(config, { x, y })
+
+				const value = config.flow.fieldFn({ x, y })
+				const v = Vector.from(value)
+
+				const offset = Vector.subtract(sand.position, fg)
+				const d = Vector.magnitude(offset)
+				const t = Vector.multiply(v, 1 / d)
+
+				accumulator = Vector.add(accumulator, t)
+			}
+		}
 
 		const acc = Vector.normalize(accumulator)
 
@@ -117,7 +137,8 @@ export function update(config, renderTime) {
 		sand.age -= 1
 
 		if(sand.age <= 0) {
-			const pos = { x: Math.random() * 2000 - 1000, y: Math.random() * 2000 - 1000 }
+			const posDelta = { x: Math.random() * 200 - 100, y: Math.random() * 200 - 100 }
+			const pos = Vector.add(config.player.position, posDelta)
 			sand.first = pos
 			sand.position = pos
 			sand.velocity = { x: Math.random() * 1, y: Math.random() * 1 }

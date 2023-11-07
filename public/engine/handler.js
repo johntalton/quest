@@ -2,7 +2,7 @@ import { Space } from '../lib/space.js'
 import { Vector } from '../lib/vector.js'
 
 function handleMouseClick(config, event) {
-	// console.log(config)
+	console.log(config)
 
 	if(!config?.ok) { return }
 	if (config.gfx.bounds === undefined) { return }
@@ -87,11 +87,11 @@ function handleKeyDown(config, event) {
 }
 
 export function bindHandler(config) {
-	window.addEventListener('click', event => {
+	config.gfx.canvas.addEventListener('click', event => {
 		handleMouseClick(config, event)
 	})
 
-  window.addEventListener('mousemove', event => {
+  config.gfx.canvas.addEventListener('mousemove', event => {
     handleMouseMove(config, event)
   })
 
@@ -103,7 +103,15 @@ export function bindHandler(config) {
 		handleKeyUp(config, event)
 	})
 
-	window.addEventListener('touchend', event => {
+	config.gfx.canvas.addEventListener('touchend', event => {
 		handleTouchEnd(config, event)
+	})
+
+	// const controllers = navigator.getGamepads()
+	// console.log(controllers)
+
+	window.addEventListener("gamepadconnected", event => {
+		console.log('gamepad connected', event.gamepad)
+		config.gfx.gamepad = event.gamepad
 	})
 }

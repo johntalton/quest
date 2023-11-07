@@ -2,6 +2,7 @@ import { bindHandler } from './handler.js'
 import { bindCommands } from './commands.js'
 
 async function loadImageBitmap(name) {
+	console.log('load texture', name)
 	const image = new Image()
 	image.src = name
 	await image.decode()
@@ -10,18 +11,30 @@ async function loadImageBitmap(name) {
 
 export async function setup(config) {
 	//
-	for(const [ key, url ] of Object.entries(config.gfx.textures)) {
-		const image = await loadImageBitmap(url)
-		config.gfx.textures[key] = image
+	if(config.gfx.textures !== undefined) {
+		for(const [ key, url ] of Object.entries(config.gfx.textures)) {
+			const image = await loadImageBitmap(url)
+			config.gfx.textures[key] = image
+		}
 	}
 
 	//
-	const length = config.flow.sand
-	config.flow.sand = Array.from({ length }, () => ({
-		position: { x: 0, y: 0 },
-		velocity: { x: 0, y: 0 },
-		age: 0
-	}))
+	if(config.flow?.sand !== undefined) {
+		const length = config.flow.sand
+		config.flow.sand = Array.from({ length }, () => ({
+			position: { x: 0, y: 0 },
+			velocity: { x: 0, y: 0 },
+			age: 0
+		}))
+	}
+
+
+	//
+	if(config.flow?.fieldFn === 'noise') {
+		config.flow.fieldFn = ({x, y}) => {
+			return Math.sin(x * .5) + Math.sin(y * .125) / 2 * 2 * Math.PI
+		}
+	}
 
 	//
 	bindHandler(config)
