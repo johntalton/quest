@@ -68,6 +68,11 @@ function handleKeyDown(config, event) {
 
 	const key = event.key
 
+	if(key === ' ') {
+		config.pause = !config.pause
+		document.getElementById('canvas').toggleAttribute('data-pause', config.pause)
+	}
+
 	if(key === 'ArrowLeft' || key === 'ArrowRight') {
 		// console.log('turn')
 		const adjustment = key === 'ArrowLeft' ? -.25 : .25

@@ -319,6 +319,7 @@ function renderSand(config) {
 
 
 	for(const sand of config.flow.sand) {
+		if(sand.first === undefined) { continue }
 		config.gfx.context.beginPath()
 		const sandRender = Space.gameToRendering(config, sand.position)
 
@@ -351,8 +352,6 @@ export function render(config, renderTime) {
 	if (!config?.ok) { return }
 
 	if (config.gfx.bounds === undefined) { bounds(config); return }
-
-	if(config.pause === true) { return }
 
 	renderBackground(config, renderTime)
 	renderSurface(config, renderTime)

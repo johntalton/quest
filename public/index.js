@@ -9,6 +9,7 @@ async function load(meta) {
 			return {
 				...meta,
 				ok: false,
+				pause: true,
 				error: `fetch(${meta.url}) - ${response.statusText }`
 			}
 		}
@@ -28,6 +29,7 @@ async function load(meta) {
 		return {
 			...meta,
 			ok: false,
+			pause: true,
 			error: e.message
 		}
 	}
@@ -194,7 +196,7 @@ async function onContentLoaded() {
 
 	const curryRenderer = (config, render) => (time) => {
 		input(config, time)
-		if(!config.pause) update(config, time)
+		update(config, time)
 		render(config, time)
 
 		requestAnimationFrame(curryRenderer(config, render))
