@@ -71,6 +71,8 @@ function handleKeyDown(config, event) {
 	if(key === ' ') {
 		config.pause = !config.pause
 		document.getElementById('canvas').toggleAttribute('data-pause', config.pause)
+		if(config.pause) { document.getElementById('dialogPause').showModal() }
+		else { document.getElementById('dialogPause').close() }
 	}
 
 	if(key === 'ArrowLeft' || key === 'ArrowRight') {

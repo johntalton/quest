@@ -110,7 +110,11 @@
 		--effect-color: white;
 
 		/* position: absolute; */
-		/* display: block; */
+		display: block;
+
+		transform: translateY(-100vh);
+		transition: transform 1s;
+
 		margin-inline: auto;
 
 		margin-block-start: 5em;
@@ -124,8 +128,15 @@
 		border: 1px solid white;
 		box-shadow: 0 0 15px 5px black, 0 0 100px 15px var(--effect-color);
 
+		outline: white;
+
 		&::backdrop {
 			background-color: hsl(from black h s l / .8);
+		}
+
+
+		&[open] {
+			transform: translateY(0);
 		}
 
 		@media (max-width: 500px) {
@@ -147,8 +158,15 @@
 
 	ul {
 		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+
+		margin-block-start: 1em;
+
 
 		& > li {
+
 			/* border: 1px solid white; */
 			/* padding-inline: 1ch; */
 			/* padding-block: 0.5em; */
@@ -160,7 +178,7 @@
 	ul#snapshotsList {
 
 		& > li {
-			margin-block-start: 0.5em;
+			/* margin-block: 0.5em; */
 			padding: 0;
 		}
 
@@ -171,7 +189,7 @@
 
 			width: 100%;
 			padding-block: .5em;
-			padding-inline-start: 2ch;
+			padding-inline: 2ch;
 
 			color: black;
 			border: 1px solid white;
@@ -203,6 +221,7 @@
 				justify-self: start;
 
 				font-weight: bold;
+				font-size: 1.2em;
 
 				margin-block: 0.5em;
 			}
