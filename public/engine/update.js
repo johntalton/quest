@@ -7,7 +7,7 @@ export function update(config, renderTime) {
 
 	if(!config.pause) {
 		// gravity
-		config.player.acceleration = Vector.add(config.player.acceleration, { x: 0, y: .001 })
+		// config.player.acceleration = Vector.add(config.player.acceleration, { x: 0, y: .001 })
 
 		// dampen
 		config.player.acceleration = Vector.multiply(config.player.acceleration, config.world.accelerationDampening)

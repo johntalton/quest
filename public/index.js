@@ -1,6 +1,6 @@
-import { setup } from './engine/setup.js'
-import { render } from './engine/render.js'
-import { update } from './engine/update.js'
+import { setup } from '@quest/engine/setup.js'
+import { render } from '@quest/engine/render.js'
+import { update } from '@quest/engine/update.js'
 
 async function load(meta) {
 	try {

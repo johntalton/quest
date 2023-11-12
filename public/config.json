@@ -28,7 +28,7 @@
 	},
 
 	"surface": {
-		"width": 200,
+		"width": 100,
 		"height": 100,
 
 		"tiles": [
@@ -66,3 +66,4 @@
 		{ "name": "third", "icon": "🥇", "description": "Now is the time for all good men to come to the aid of their fellow man" }
 	]
 }
+☠️

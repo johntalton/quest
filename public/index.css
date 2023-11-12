@@ -3,6 +3,7 @@
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
+		font-family: inherit;
 	}
 
 	img {
@@ -16,8 +17,21 @@
 		font-style: italic;
 	}
 
+
+	@font-face {
+		font-family: "hack";
+		src: url("./font/hack/Hack-Regular.ttf")  format("truetype");
+	}
+
+	@font-face {
+		font-family: "fira";
+		src: url("./font/Fira_Sans/FiraSans-Black.ttf") format("truetype");
+	}
+
 	html {
 		height: 100vh;
+		/* font-family: "fira"; */
+		font-family: "hack";
 	}
 
 	body {
@@ -152,8 +166,10 @@
 		display: block;
 		font-size: 1.5em;
 		text-transform: uppercase;
-		font-family: sans-serif;
+		font-family: "fira";
 		margin-block-end: 1em;
+
+
 	}
 
 	ul {

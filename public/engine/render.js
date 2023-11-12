@@ -184,8 +184,9 @@ function renderPlayer(config, renderTime) {
 }
 
 function renderLines(config, lines, position, options = {}) {
-	const { fontSize, style, textAlign, textBaseLine, fill } = {
+	const { fontSize, fontFace, style, textAlign, textBaseLine, fill } = {
 		fontSize: 12,
+		fontFace: 'hack',
 		style: 'rgba(0 0 0 / .5)',
 		textAlign: 'center',
 		textBaseLine: 'middle',
@@ -196,7 +197,7 @@ function renderLines(config, lines, position, options = {}) {
 
 	const lineSize = fontSize * 1.2
 
-	config.gfx.context.font = `normal ${fontSize}px sans-serif`
+	config.gfx.context.font = `normal ${fontSize}px ${fontFace}`
 	config.gfx.context.textAlign = textAlign
 	config.gfx.context.textBaseline = textBaseLine
 
@@ -234,10 +235,11 @@ function renderTarget(config, target, style) {
 	const line1 = 'Pos: ' + Math.round(target.x) + ' : ' + Math.round(target.y)
 
 	const fontSize = 12
+	const fontFace = 'sans-serif'
 	const textX = renderPosition.x
 	const textY = renderPosition.y + r + fontSize
 	config.gfx.context.fillStyle = 'rgba(0 0 0 / .5)'
-	config.gfx.context.font = `normal ${fontSize}px sans-serif`
+	config.gfx.context.font = `normal ${fontSize}px ${fontFace}`
 	config.gfx.context.textAlign = 'center'
 	config.gfx.context.textBaseline = 'middle'
 	config.gfx.context.fillText(line1, textX, textY)
