@@ -1,4 +1,11 @@
+/** @typedef {{ origin: Vec, width: number, height: number}} Rectangle */
+
 export class Rect {
+	/**
+	 * @param {Rectangle} rect
+	 * @param {Rectangle} clipRect
+	 * @returns {Rectangle}
+	 */
 	static clip(rect, clipRect) {
 		return {
 			origin: {
