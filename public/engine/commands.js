@@ -1,4 +1,4 @@
-
+// @ts-check
 export function bindCommands(config) {
 	globalThis.goto = (x, y) => {
 		config.player.position = { x, y }

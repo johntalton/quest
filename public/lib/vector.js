@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @typedef {{ x: number, y: number }} Vec */
 
 export class Vector {

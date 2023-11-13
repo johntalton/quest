@@ -1,4 +1,5 @@
-import { mapRange } from './scalar.js'
+// @ts-check
+import { mapRange } from '@quest/lib/scalar.js'
 
 export class Space {
 	static renderToGame(config, vec) {

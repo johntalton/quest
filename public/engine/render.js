@@ -1,7 +1,8 @@
-import { Vector } from '../lib/vector.js'
-import { Space } from '../lib/space.js'
-import { steeringForce, bounds, surfaceArea, tileLookup } from '../lib/util.js'
-import { mapRange } from '../lib/scalar.js'
+// @ts-check
+import { Vector } from '@quest/lib/vector.js'
+import { Space } from '@quest/lib/space.js'
+import { steeringForce, bounds, surfaceArea, tileLookup } from '@quest/lib/util.js'
+import { mapRange } from '@quest/lib/scalar.js'
 
 function renderBackground(config, renderTime) {
 	//
@@ -350,6 +351,23 @@ function renderFlow(config, renderTime) {
 	renderField(config)
 }
 
+function renderSpline(config, renderTime)  {
+	config.gfx.context.lineWidth = 5
+
+	config.gfx.context.beginPath()
+	config.gfx.context.moveTo(600, 800)
+	config.gfx.context.bezierCurveTo(600, 1200, 900, 900, 900, 800)
+
+	config.gfx.context.strokeStyle = 'blue'
+	config.gfx.context.stroke()
+
+
+	config.gfx.context.bezierCurveTo(900, 400, 600, 400, 600, 800)
+
+	config.gfx.context.strokeStyle = 'red'
+	config.gfx.context.stroke()
+}
+
 export function render(config, renderTime) {
 	if (!config?.ok) { return }
 
@@ -358,6 +376,7 @@ export function render(config, renderTime) {
 	renderBackground(config, renderTime)
 	renderSurface(config, renderTime)
 	renderFlow(config, renderTime)
+	renderSpline(config, renderTime)
 	renderBounds(config, renderTime)
 	renderPlayerTarget(config, renderTime)
 	renderPlayer(config, renderTime)

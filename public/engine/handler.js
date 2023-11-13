@@ -1,8 +1,9 @@
-import { Space } from '../lib/space.js'
-import { Vector } from '../lib/vector.js'
+// @ts-check
+import { Space } from '@quest/lib/space.js'
+import { Vector } from '@quest/lib/vector.js'
 
 function handleMouseClick(config, event) {
-	console.log(config)
+	// console.log(config)
 
 	if(!config?.ok) { return }
 	if (config.gfx.bounds === undefined) { return }

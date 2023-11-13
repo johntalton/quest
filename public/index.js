@@ -1,12 +1,52 @@
+// @ts-check
 import { setup } from '@quest/engine/setup.js'
 import { render } from '@quest/engine/render.js'
 import { update } from '@quest/engine/update.js'
+import { Vector } from '@quest/lib/vector.js'
 
+/**
+ * @typedef {{ url: string }} MetaConfig
+ *
+ * @typedef {{
+* }} PreGraphics
+
+ * @typedef {{
+ *  viewport: HTMLElement,
+ * 	canvas: HTMLCanvasElement,
+ * 	context: RenderingContext
+ * }} Graphics
+ *
+ * @typedef {{  }} Player
+ *
+ * @typedef {{ ok: boolean, error?: string, pause: boolean, player: Player }} CommonConfig
+ * @typedef {CommonConfig & {
+ * 	gfx: PreGraphics,
+ * }} PreConfig
+ *
+ * @typedef {CommonConfig & {
+ * 	gfx: Graphics
+ * }} Config
+ */
+
+/**
+ * @param {MetaConfig} meta
+ * @returns {Promise<PreConfig>}
+ */
 async function load(meta) {
+	const base = {
+		gfx: {
+			viewport: null,
+			canvas: null,
+			context: null
+		},
+		world: {},
+		player: {}
+	}
 	try {
 		const response = await fetch(meta.url)
 		if(!response.ok) {
 			return {
+				...base,
 				...meta,
 				ok: false,
 				pause: true,
@@ -15,8 +55,9 @@ async function load(meta) {
 		}
 
 		const json = await response.json()
-		console.log(json)
+		// console.log(json)
 		return {
+			...base,
 			ok: true,
 			pause: true,
 			...meta,
@@ -27,6 +68,7 @@ async function load(meta) {
 		// either fetch:dns error
 		//  or json parse error
 		return {
+			...base,
 			...meta,
 			ok: false,
 			pause: true,
@@ -65,14 +107,16 @@ function observerOpenDialog(target, callback) {
 
 function handleErrorDialog(config) {
 	const dialog = document.getElementById('dialogError')
+	if(!(dialog instanceof HTMLDialogElement)) { throw new Error('dialog is not a dialog') }
 
 	if(config.error === undefined) {
-		console.log('no error close and return')
+		// console.log('no error close and return')
 		dialog.close()
 		return
 	}
 
 	const messageOut = document.getElementById('dialogErrorMessage')
+	if(!(messageOut instanceof HTMLOutputElement)) { throw new Error('ouput is not an output') }
 	messageOut.value = config.error
 	dialog.showModal()
 
@@ -80,38 +124,49 @@ function handleErrorDialog(config) {
 
 function setupUI(config) {
 	const snapshotDialog = document.getElementById('dialogSnapshot')
+	if(snapshotDialog === null) { throw new Error('undefined Snapshot dialog element')}
+	if(!(snapshotDialog instanceof HTMLDialogElement)) { throw new Error('dialog is not a dialog') }
+
 	const snapshotList = document.getElementById('snapshotsList')
+	if(snapshotList === null) { throw new Error('undefined Snapshot list element')}
+
 	const template = snapshotList.querySelector('template')
+	if(template === null) { throw new Error('missing list template') }
 
 	observerOpenDialog(snapshotDialog, event => {
 		if(config.saves === undefined) { return }
 
 		snapshotList.querySelectorAll('li').forEach(li => li.remove())
-		console.log('Load Snapshot')
+		// console.log('Load Snapshot')
 		snapshotList.append(...config.saves.map(save => {
 			// const li = document.createElement('li')
 			const li = template.content.cloneNode(true)
+			if(!(li instanceof DocumentFragment)) { throw new Error('template must be a element root') }
+
+			// if(li === null) { throw new Error('f') }
 			const name = li.querySelector('slot[name="name"]')
-			name.innerText = save.name
+			if(name !== null && name instanceof HTMLElement) { name.innerText = save.name }
 
 			const desc = li.querySelector('slot[name="description"]')
-			desc.innerText = save.description ?? ''
+			if(desc !== null && desc instanceof HTMLElement) { desc.innerText = save.description ?? '' }
 
 			const icon = li.querySelector('slot[name="icon"]')
-			icon.innerText = save.icon ?? ''
+			if(icon !== null && icon instanceof HTMLElement) { icon.innerText = save.icon ?? '' }
 
 			const button = li.querySelector('button[part="button"]')
-			button.addEventListener('click', event => {
-				console.log('Handle', save.name)
-				button.disabled = true
+			if(button !== null && button instanceof HTMLButtonElement) {
+				button.addEventListener('click', event => {
+					// console.log('Handle', save.name)
+					button.disabled = true
 
-				const form = button.closest('form')
-				form.submit()
+					const form = button.closest('form')
+					if(form !== null && form instanceof HTMLElement) { form.submit() }
 
-				//
-				document.getElementById('canvas').toggleAttribute('data-pause')
+					//
+					config.gfx.canvas.toggleAttribute('data-pause')
 
-			}, { once: true })
+				}, { once: true })
+			}
 
 			return li
 		}))
@@ -120,7 +175,6 @@ function setupUI(config) {
 	snapshotDialog.showModal()
 }
 
-import { Vector } from './lib/vector.js'
 let was = false
 let debouncePause = Date.now()
 
@@ -149,7 +203,7 @@ function input(config, time) {
 	if(buttons[13].value === 1 && (Date.now() - debouncePause > .25 * 1000)) {
 		debouncePause = Date.now()
 		config.pause = true
-		document.getElementById('canvas').toggleAttribute('data-pause')
+		config.gfx.canvas.toggleAttribute('data-pause')
 	}
 
 	// for(const button of buttons) {
@@ -158,18 +212,52 @@ function input(config, time) {
 	// }
 }
 
+/**
+ * @param {PreConfig} config
+ * @returns {Config}
+ */
+function bindGFX(config) {
+	const viewport = document.getElementById('viewport')
+	if(viewport === null) { throw new Error('undefined viewport element') }
+	const canvas = document.getElementById('canvas')
+	if(canvas === null) { throw new Error('undefined canvas element') }
+	if(!(canvas instanceof HTMLCanvasElement)) { throw new Error('canvas is not a ... well, canvas') }
+	const context = canvas.getContext('2d', {
+		alpha: true,
+		colorSpace: 'display-p3'
+	})
+	if(context === null) { throw new Error('not able to create context') }
+
+	// if(config.gfx === undefined) { config.gfx = {} }
+	// config.gfx.viewport = viewport
+	// config.gfx.canvas = canvas
+	// config.gfx.context = context
+
+	const gfx = config?.gfx ?? {}
+	return {
+		...config,
+		gfx: {
+			...gfx,
+			viewport, canvas, context
+		}
+	}
+}
+
+
 async function onContentLoaded() {
 	const configLink = document.getElementById('config')
-	if(configLink === null) {
-		throw new Error('no config <link> tag in document')
-	}
-	console.log('load config from', configLink.href)
+	if(configLink === null) { throw new Error('no config <link> tag in document') }
+	if(!(configLink instanceof HTMLLinkElement)) { throw new Error('link is not a link') }
+
 	const metaConfig = {
 		url: configLink.href
 	}
 
 	//
-	const config = await load(metaConfig)
+	const preConfig = await load(metaConfig)
+
+	//
+	const config = bindGFX(preConfig)
 
 	//
 	setupUI(config)
@@ -177,22 +265,11 @@ async function onContentLoaded() {
 	//
 	handleErrorDialog(config)
 
+
 	//
-	const viewport = document.getElementById('viewport')
-	const canvas = document.getElementById('canvas')
-	const context = canvas.getContext('2d', {
-		alpha: true,
-		colorSpace: 'display-p3'
-	})
-
-	if(config.gfx === undefined) { config.gfx = {} }
-	config.gfx.viewport = viewport
-	config.gfx.canvas = canvas
-	config.gfx.context = context
-
 	await setup(config)
 
-	observerPauseAttribute(config, canvas)
+	observerPauseAttribute(config, config.gfx.canvas)
 
 	const curryRenderer = (config, render) => (time) => {
 		input(config, time)

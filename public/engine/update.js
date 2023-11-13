@@ -1,6 +1,7 @@
-import { Vector } from '../lib/vector.js'
-import { steeringForce } from '../lib/util.js'
-import { Space } from '../lib/space.js'
+// @ts-check
+import { Vector } from '@quest/lib/vector.js'
+import { steeringForce } from '@quest/lib/util.js'
+import { Space } from '@quest/lib/space.js'
 
 export function update(config, renderTime) {
 	if(!config?.ok) { return }

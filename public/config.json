@@ -1,4 +1,6 @@
 {
+	"$schema": "./config.schema.json",
+
 	"gfx": {
 		"textures": {
 			"cabinet": "./cabinet.png"

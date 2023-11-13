@@ -1,6 +1,7 @@
-import { Vector } from './vector.js'
-import { Rect } from '../lib/rect.js'
-import { Space } from '../lib/space.js'
+// @ts-check
+import { Vector } from '@quest/lib/vector.js'
+import { Rect } from '@quest/lib/rect.js'
+import { Space } from '@quest/lib/space.js'
 
 export function steering(position, velocity, target) {
 	return Vector.subtract(Vector.subtract(target, position), velocity)

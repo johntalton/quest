@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @typedef {{ origin: Vec, width: number, height: number}} Rectangle */
 
 export class Rect {

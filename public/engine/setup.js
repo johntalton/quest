@@ -1,8 +1,9 @@
-import { bindHandler } from './handler.js'
-import { bindCommands } from './commands.js'
+// @ts-check
+import { bindHandler } from '@quest/engine/handler.js'
+import { bindCommands } from '@quest/engine/commands.js'
 
 async function loadImageBitmap(name) {
-	console.log('load texture', name)
+	// console.log('load texture', name)
 	const image = new Image()
 	image.src = name
 	await image.decode()

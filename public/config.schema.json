@@ -1,0 +1,128 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:quest/config",
+
+	"title": "Configuration",
+
+	"$defs": {
+		"vector": {
+			"additionalProperties": false,
+			"properties": {
+				"x": { "type": "number" },
+				"y": { "type": "number" }
+			}
+		},
+
+		"save": {
+			"additionalProperties": false,
+			"properties": {
+				"name": { "type": "string" },
+				"icon": { "type": "string" },
+				"description": { "type": "string" }
+			}
+		},
+
+		"sprite": {
+			"additionalProperties": false,
+			"properties": {
+				"name": { "type": "string" },
+				"texture": { "type": "string" },
+				"origin": {
+					"$ref": "#/$defs/vector"
+				},
+				"width": { "type": "number" },
+				"height": { "type": "number" }
+			}
+		}
+	},
+
+	"patternProperties": { "\\$*": {} },
+	"additionalProperties": false,
+	"properties": {
+		"gfx": {
+			"additionalProperties": false,
+			"properties": {
+				"textures": {
+					"patternProperties": {
+						"*": {
+							"type": "string"
+						}
+					}
+				},
+				"sprites": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/sprite"
+					}
+				}
+			}
+		},
+		"world": {
+			"additionalProperties": false,
+			"properties": {
+				"accelerationDampening": { "type": "number" },
+				"velocityDampening": { "type": "number" },
+				"accelerationLimit": { "type": "number" },
+
+				"origin": { "$ref": "#/$defs/vector" },
+				"bounds": {
+					"additionalProperties": false,
+					"properties": {
+						"width": { "type": "number" },
+						"height": { "type": "number" }
+					}
+				}
+			}
+		},
+		"surface": {
+			"additionalProperties": false,
+			"properties": {
+				"width": { "type": "number" },
+				"height": { "type": "number" },
+				"tiles": {
+					"type": "array",
+					"items": {
+						"additionalProperties": false,
+						"properties": {
+							"x": { "type": "number" },
+							"y": { "type": "number" },
+							"sprite": { "type": "string" }
+						}
+					}
+				}
+			}
+		},
+		"flow": {
+			"additionalProperties": false,
+			"properties": {
+				"sand": { "type": "number" },
+				"fieldFn": { "type": "string" },
+				"field": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/vector"
+					}
+				}
+			}
+		},
+		"player": {
+			"additionalProperties": false,
+			"properties": {
+				"facing": { "type": "number" },
+				"fov": { "type": "number" },
+				"position": { "$ref": "#/$defs/vector"},
+				"velocity": { "$ref": "#/$defs/vector"},
+				"acceleration": { "$ref": "#/$defs/vector"}
+			}
+		},
+		"saves": {
+			"type": "array",
+			"maxItems": 3,
+			"items": {
+				"$ref": "#/$defs/save"
+			}
+		}
+	},
+
+	"required": [ "gfx", "world", "surface", "flow", "player", "saves" ]
+}
